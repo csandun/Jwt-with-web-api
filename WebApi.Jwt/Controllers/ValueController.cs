@@ -6,9 +6,9 @@ namespace WebApi.Jwt.Controllers
     public class ValueController : ApiController
     {
         [JwtAuthentication]
-        public string Get()
+        public IHttpActionResult Get()
         {
-            return "value";
+            return Json(new { data = "value is showing"});
         }
     }
 }

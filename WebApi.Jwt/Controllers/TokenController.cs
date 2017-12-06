@@ -1,5 +1,8 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Web.Http;
+using System.Web.Http.Results;
+using Newtonsoft.Json;
 
 namespace WebApi.Jwt.Controllers
 {
@@ -7,20 +10,39 @@ namespace WebApi.Jwt.Controllers
     {
         // THis is naive endpoint for demo, it should use Basic authentication to provide token or POST request
         [AllowAnonymous]
-        public string Get(string username, string password)
+        public IHttpActionResult Get(string username, string password)
         {
-            if (CheckUser(username, password))
-            {
-                return JwtManager.GenerateToken(username);
-            }
-
-            throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            
+           
+                try
+                {
+                    if (CheckUser(username, password))
+                    {
+                        return Json(new { data = JwtManager.GenerateToken(username) });
+                    }
+                    throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+               
+          
+            
         }
 
         public bool CheckUser(string username, string password)
         {
-            // should check in the database
-            return true;
+            if (username == "sandun" && password =="1234")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
         }
     }
 }
